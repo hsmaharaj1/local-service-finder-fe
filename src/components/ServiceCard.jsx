@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Star, MapPin } from "lucide-react"
 
-export default function ServiceCard ({ name, category, location, rating }) {
+export default function ServiceCard({ name, category, location, rating, provider_id, onClick }) {
   return (
     <Card className="w-full max-w-sm mx-auto overflow-hidden transition-all hover:shadow-lg">
       <CardHeader>
@@ -32,7 +32,7 @@ export default function ServiceCard ({ name, category, location, rating }) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Book Now</Button>
+        <Button onClick={onClick} className="w-full">Book Now</Button>
       </CardFooter>
     </Card>
   )

@@ -1,13 +1,12 @@
 import React from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
-
+import axios from 'axios'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
@@ -30,7 +29,7 @@ const formSchema = z.object({
   time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, { message: "Time must be in HH:MM format." }),
 })
 
-const BookingForm = () => {
+export default function BookingForm({ provider_id }){
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,9 +41,18 @@ const BookingForm = () => {
   })
 
   const onSubmit = (data) => {
-    console.log(data)
-    // Here you would typically send the data to your backend
-    alert("Booking submitted successfully!")
+    // Console log the form data when submitted
+    console.log("Booking Details:", data)
+    const { name, phone: number, date, time } = data;
+    const timestampString = `${date.toISOString().split('T')[0]}T${time}:00`;
+    const timestamp = new Date(timestampString);
+    
+    axios.post('http://localhost:5001/api/bookings/book', {name, number, timestamp, provider_id}).then((res)=>{
+      alert("Booked");
+      window.location.reload();
+    }).catch((err)=>{
+      console.log(err);
+    })
   }
 
   return (
@@ -133,5 +141,3 @@ const BookingForm = () => {
     </div>
   )
 }
-
-export default BookingForm
