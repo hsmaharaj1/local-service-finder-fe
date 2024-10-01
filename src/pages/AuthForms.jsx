@@ -18,6 +18,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import HomeNavbar from '@/components/HomeNavbar'
 import Footer from '@/components/Footer'
+import axios from 'axios';
+
 
 
 const loginSchema = z.object({
@@ -103,13 +105,37 @@ const RegisterForm = () => {
       email: "",
       password: "",
     },
-  })
+  });
 
-  const onSubmit = (data) => {
-    console.log("Register data:", data)
-    // Here you would typically send the data to your backend
-    alert("Registration submitted successfully!")
-  }
+  const onSubmit = async (data) => {
+    console.log("Register data:", data);
+    const hashedPassword = await bcrypt.hash(data.password, 10)
+    const userData = {
+      name: data.name,
+      email: data.email,
+      password: hashedPassword
+    }
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/providers/add-provider", userData);
+
+      if (response.status === 201) {
+        alert("Registration submitted successfully!");
+        console.log("Response from server:", response.data);
+      } else {
+        alert(`Failed to register: ${response.data.message}`);
+        console.error("Error:", response.data);
+      }
+    } catch (error) {
+      if (error.response) {
+        alert(`Error: ${error.response.data.message}`);
+        console.error("Error:", error.response.data);
+      } else {
+        alert("An error occurred during registration.");
+        console.error("Error:", error.message);
+      }
+    }
+  };
 
   return (
     <Form {...form}>
@@ -156,8 +182,9 @@ const RegisterForm = () => {
         <Button type="submit" className="w-full">Register</Button>
       </form>
     </Form>
-  )
-}
+  );
+};
+
 
 export default function AuthForms() {
   return (
