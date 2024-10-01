@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import ServiceCard from '@/components/ServiceCard';
 import HomeNavbar from '@/components/HomeNavbar';
 import Footer from '@/components/Footer';
+import axios from 'axios';
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
@@ -35,7 +36,7 @@ const SearchBar = ({ onSearch }) => {
   );
 };
 
-const serviceProviders = [
+let serviceProviders = [
   { name: "John's Plumbing", category: "Plumbing", location: "New York", rating: 4.8 },
   { name: "Quick Electricians", category: "Electrical", location: "New York", rating: 4.6 },
   { name: "Green Thumb Gardening", category: "Landscaping", location: "New York", rating: 4.9 },
@@ -50,6 +51,32 @@ export default function Home() {
 
   useEffect(() => {
     const getLocation = () => {
+
+      axios.get('http://localhost:5000/api/providers/random').then((res) => {
+        if (res.data.success) {
+          const tempProviders = res.data.providers; // Store the providers in a temporary variable
+
+          // Transform the providers into the desired format
+          const serviceProviders2 = tempProviders.map(provider => {
+              return {
+                  name: provider.about, // Assuming "about" is used as the name here
+                  category: provider.category,
+                  location: provider.location,
+                  rating: 4.5 // Example rating, you might want to replace it with actual rating data
+              };
+          });
+
+          // serviceProviders = serviceProviders2
+
+          // Log the transformed service providers
+          console.log('Filtered Service Providers:', serviceProviders);
+        } else {
+          console.error('Failed to fetch providers:', res.data.message);
+        }
+      }).catch((error) => {
+        console.error('Error fetching providers:', error);
+      });
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
