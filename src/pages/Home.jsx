@@ -16,6 +16,7 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     onSearch(query);  // Send the query back to the parent component (Home)
   };
 
@@ -110,33 +111,24 @@ export default function Home() {
 
   // Function to handle the search submission
   const handleSearch = async (query) => {
+    const search = query;
     if (query.trim() && location.latitude && location.longitude) {
-      try {
-        console.log(query, location.latitude, location.longitude)
-        // Sending the query, latitude, and longitude to the backend
-        const response = await fetch('/api/search', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query,
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }),
-        });
+        try {
+            console.log(query, location.latitude, location.longitude);
+            // Sending the query, latitude, and longitude to the backend using axios
+            const response = await axios.post('http://localhost:5000/api/search/query', {search,location});
 
-        const data = await response.json();
-        console.log('Search results:', data);
+            const data = response.data; // Extract data from the response
+            console.log('Search results:', data);
 
-        // Optionally, handle the search results (e.g., display them on the page)
-      } catch (err) {
-        console.error('Error sending search request:', err);
-      }
+            // Optionally, handle the search results (e.g., display them on the page)
+        } catch (err) {
+            console.error('Error sending search request:', err);
+        }
     } else {
-      console.error('Location is not available.');
+        console.error('Location is not available.');
     }
-  };
+};
 
   return (
     <div className="min-h-screen bg-background">
