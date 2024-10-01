@@ -97,7 +97,7 @@ const ServiceProviderForm = ({ initialData = {} }) => {
             };
 
             // Send data to the backend
-            await axios.post('http://localhost:5000/api/providers/add-provider-details', requestBody);
+            await axios.post('http://localhost:5001/api/providers/add-provider-details', requestBody);
             alert("Service provider details submitted successfully!");
 
         } catch (error) {

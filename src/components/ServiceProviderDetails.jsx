@@ -65,12 +65,12 @@ export default function ServiceProviderDetails({ provider_id }){
               <h3 className="text-lg font-semibold mb-2">Availability</h3>
               <div className="flex items-center text-muted-foreground">
                 <Clock className="h-4 w-4 mr-2" />
-                <span>{provider.availability}</span>
+                <span>Mon-Fri: 8AM-6PM, Sat: 9AM-3PM</span>
               </div>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-2">About</h3>
-              <p className="text-muted-foreground">{provider.description}</p>
+              <p className="text-muted-foreground">{provider.about}</p>
             </div>
           </CardContent>
           <CardFooter>

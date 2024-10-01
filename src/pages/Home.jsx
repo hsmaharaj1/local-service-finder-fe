@@ -61,7 +61,7 @@ export default function Home() {
           const tempProviders = res.data.providers; 
 
           const serviceProviders2 = tempProviders.map(provider => ({
-              name: provider.about, 
+              name: provider.name, 
               category: provider.category,
               location: provider.location,
               rating: 4.5, 
@@ -109,12 +109,21 @@ export default function Home() {
   }, []);
 
   const handleSearch = async (query) => {
+    console.log(location);
     const search = query;
     if (query.trim() && location.latitude && location.longitude) {
       try {
         console.log(query, location.latitude, location.longitude);
         const response = await axios.post('http://localhost:5001/api/search/query', { search, location });
-        const data = response.data;
+        const data = response.data.services;
+        const data2 = data.map(provider => ({
+          name: provider.name, 
+          category: provider.category,
+          location: provider.location,
+          rating: 4.5, 
+          provider_id: provider.id
+        }));
+        setsp(data2);
         console.log('Search results:', data);
       } catch (err) {
         console.error('Error sending search request:', err);
