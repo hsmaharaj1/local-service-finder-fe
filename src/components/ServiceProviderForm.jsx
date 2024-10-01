@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-
+import axios from 'axios'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -44,6 +44,29 @@ const categories = [
     "Other"
 ]
 
+// Function to fetch coordinates
+async function getCoordinates(address) {
+    const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (data.length > 0) {
+            const location = data[0];
+            const coordinates = {
+                latitude: parseFloat(location.lat),
+                longitude: parseFloat(location.lon)
+            };
+            return coordinates;
+        } else {
+            throw new Error('Unable to geocode address');
+        }
+    } catch (error) {
+        throw new Error('Error fetching geocoding data: ' + error.message);
+    }
+}
+
 const ServiceProviderForm = ({ initialData = {} }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -55,10 +78,32 @@ const ServiceProviderForm = ({ initialData = {} }) => {
         },
     })
 
-    const onSubmit = (data) => {
-        console.log(data)
-        // Here you would typically send the data to your backend
-        alert("Service provider details submitted successfully!")
+    // Submit form data
+    const onSubmit = async (data) => {
+        try {
+            const { location, about, category } = data;
+            const coordinates = await getCoordinates(location);
+
+            // Assuming user_id is coming from the session or some other source
+            const user_id = localStorage.getItem('id'); // Replace with actual user ID
+
+            const requestBody = {
+                location,
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude,
+                about,
+                category,
+                user_id
+            };
+
+            // Send data to the backend
+            await axios.post('http://localhost:5000/api/providers/add-provider-details', requestBody);
+            alert("Service provider details submitted successfully!");
+
+        } catch (error) {
+            console.error("Error submitting provider details:", error);
+            alert("Failed to submit provider details.");
+        }
     }
 
     return (
@@ -135,9 +180,9 @@ const ServiceProviderForm = ({ initialData = {} }) => {
                                                 <SelectValue placeholder="Select a category" />
                                             </SelectTrigger>
                                         </FormControl>
-                                        <SelectContent>
+                                        <SelectContent className="bg-white">
                                             {categories.map((category) => (
-                                                <SelectItem key={category} value={category}>
+                                                <SelectItem key={category} value={category} className="bg-white hover:bg-gray-100">
                                                     {category}
                                                 </SelectItem>
                                             ))}

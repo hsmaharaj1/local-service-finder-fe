@@ -19,7 +19,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import HomeNavbar from '@/components/HomeNavbar'
 import Footer from '@/components/Footer'
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 
 const loginSchema = z.object({
@@ -39,27 +40,26 @@ const LoginForm = () => {
       password: "",
     },
   })
-
+  const navigate = useNavigate()
   const onSubmit = async (data) => {
-    // Hash the password before sending it to the backend
-    const hashedPassword = await bcrypt.hash(data.password, 10); // Using salt rounds = 10
+    
 
-    // Replace plain password with hashed password
-    const loginData = {
-      email: data.email,
-      password: hashedPassword,
-    };
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', data);
+      if(response.data.success){
+        //Dashboard Page
 
-    console.log("Login data with hashed password:", loginData);
+        console.log("Cookie: ", response.data.provider.id)
+        localStorage.setItem('id', response.data.provider.id)
+        console.log(localStorage.getItem('id'))
+        navigate('/dashboard')
+      }
 
-    // Here you would typically send the loginData to your backend
-    // Example:
-    // const response = await fetch('/api/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(loginData),
-    // });
-    // const result = await response.json();
+    } catch (error) {
+      console.error('Login error:', error);
+      alert("Error logging in. Please try again.");
+    }
+    
   };
 
   return (
@@ -117,7 +117,7 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/providers/add-provider", userData);
+      const response = await axios.post("http://localhost:5000/api/providers/add-provider", data);
 
       if (response.status === 201) {
         alert("Registration submitted successfully!");

@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-import { format } from 'date-fns'
-import { ChevronDown, ChevronUp } from 'lucide-react'
-
+import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,14 +8,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -24,112 +23,133 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/dialog";
+import { Menu } from "lucide-react"
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { decodeJWT } from '../utils/jwtUtils'; // Import the custom JWT decode function
+import ServiceProviderForm from '@/components/ServiceProviderForm';
 
-const bookings = [
-  { id: 1, name: "John Doe", date: new Date(2023, 5, 15, 10, 30), service: "Plumbing", status: "Confirmed" },
-  { id: 2, name: "Jane Smith", date: new Date(2023, 5, 16, 14, 0), service: "Electrical", status: "Pending" },
-  { id: 3, name: "Bob Johnson", date: new Date(2023, 5, 17, 11, 15), service: "Cleaning", status: "Completed" },
-  { id: 4, name: "Alice Brown", date: new Date(2023, 5, 18, 9, 0), service: "Gardening", status: "Confirmed" },
-  { id: 5, name: "Charlie Wilson", date: new Date(2023, 5, 19, 16, 30), service: "Painting", status: "Pending" },
-]
+const HomeNavbar = () => {
+  const navigate = useNavigate();
 
-const BookingDetails = ({ booking }) => (
-  <div className="space-y-2">
-    <p><strong>Name:</strong> {booking.name}</p>
-    <p><strong>Date:</strong> {format(booking.date, 'PPP')}</p>
-    <p><strong>Time:</strong> {format(booking.date, 'p')}</p>
-    <p><strong>Service:</strong> {booking.service}</p>
-    <p><strong>Status:</strong> {booking.status}</p>
-  </div>
-)
-
-const BookingsDashboard = () => {
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-
-  const sortedBookings = React.useMemo(() => {
-    let sortableBookings = [...bookings];
-    if (sortConfig.key !== null) {
-      sortableBookings.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableBookings;
-  }, [bookings, sortConfig]);
-
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const SortIcon = ({ columnKey }) => {
-    if (sortConfig.key === columnKey) {
-      return sortConfig.direction === 'ascending' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />;
-    }
-    return null;
+  const handleLogout = () => {
+    localStorage.clear()
+    navigate('/login'); // Navigate to the login page
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Bookings Dashboard</CardTitle>
-        <CardDescription>View and manage all your bookings</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="cursor-pointer" onClick={() => requestSort('name')}>
-                Name {<SortIcon columnKey="name" />}
-              </TableHead>
-              <TableHead className="cursor-pointer" onClick={() => requestSort('date')}>
-                Date {<SortIcon columnKey="date" />}
-              </TableHead>
-              <TableHead className="cursor-pointer" onClick={() => requestSort('date')}>
-                Time {<SortIcon columnKey="date" />}
-              </TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedBookings.map((booking) => (
-              <TableRow key={booking.id}>
-                <TableCell>{booking.name}</TableCell>
-                <TableCell>{format(booking.date, 'PP')}</TableCell>
-                <TableCell>{format(booking.date, 'p')}</TableCell>
-                <TableCell>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline">View Details</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Booking Details</DialogTitle>
-                        <DialogDescription>
-                          Full information about the booking
-                        </DialogDescription>
-                      </DialogHeader>
-                      <BookingDetails booking={booking} />
-                    </DialogContent>
-                  </Dialog>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-  )
-}
+    <nav className="flex items-center justify-between p-4 bg-primary text-primary-foreground">
+      <div className="text-xl font-bold">Local Service Finder</div>
+      <Button variant="ghost" size="icon" className="md:hidden">
+        <Menu className="h-6 w-6" />
+      </Button>
+      <div className="hidden md:flex space-x-4">
+        <Button variant="ghost" onClick={() => navigate('/')}>Home</Button>
+        <Button variant="ghost" onClick={handleLogout}>Logout</Button>
+      </div>
+    </nav>
+  );
+};
 
-export default BookingsDashboard
+const BookingsDashboard = () => {
+  const [bookings, setBookings] = useState([]);
+  const [showForm, setShowForm] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      const token = localStorage.getItem('id') // Get the token from cookies
+
+
+      if (!token) {
+        navigate('/login'); // Redirect to login if no token is found
+        return;
+      }
+
+      const check = await axios.get(`http://localhost:5000/api/auth/hasdetails/?provider_id=${token}`)
+      setShowForm(!check.data.hasDetails)
+
+      try {
+        const providerId = token
+
+        const response = await axios.get(`http://localhost:5173/api/providers/check-bookings/${providerId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        });
+
+        setBookings(response.data.bookings); // Update bookings state with fetched data
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      }
+    };
+
+    fetchBookings();
+  }, [navigate]);
+
+  const BookingDetails = ({ booking }) => (
+    <div className="space-y-2">
+      <p><strong>Name:</strong> {booking.user_name}</p>
+      <p><strong>Date:</strong> {format(new Date(booking.booking_datetime), 'PPP')}</p>
+      <p><strong>Time:</strong> {format(new Date(booking.booking_datetime), 'p')}</p>
+      <p><strong>Service:</strong> {booking.service}</p>
+      <p><strong>Status:</strong> {booking.is_done ? "Completed" : "Pending"}</p>
+    </div>
+  );
+
+  return (
+    <>
+      <HomeNavbar />
+      {showForm && <ServiceProviderForm />}
+      {!showForm && <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Bookings Dashboard</CardTitle>
+          <CardDescription>View and manage all your bookings</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Time</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {bookings && bookings.map((booking) => (
+                <TableRow key={booking.id}>
+                  <TableCell>{booking.user_name}</TableCell>
+                  <TableCell>{format(new Date(booking.booking_datetime), 'PP')}</TableCell>
+                  <TableCell>{format(new Date(booking.booking_datetime), 'p')}</TableCell>
+                  <TableCell>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline">View Details</Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Booking Details</DialogTitle>
+                          <DialogDescription>
+                            Full information about the booking
+                          </DialogDescription>
+                        </DialogHeader>
+                        <BookingDetails booking={booking} />
+                      </DialogContent>
+                    </Dialog>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+      }
+
+    </>
+  );
+};
+
+export default BookingsDashboard;
