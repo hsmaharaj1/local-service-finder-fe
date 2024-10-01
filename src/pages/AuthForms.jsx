@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import bcrypt from 'bcryptjs'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -187,6 +187,14 @@ const RegisterForm = () => {
 
 
 export default function AuthForms() {
+  const navigate = useNavigate()
+  useEffect (()=>{
+    const user_id = localStorage.getItem('id');
+    if(user_id){
+      navigate('/dashboard')
+    }
+  }, [])
+
   return (
     <>
       <HomeNavbar />
