@@ -6,6 +6,7 @@ import ServiceCard from '@/components/ServiceCard';
 import HomeNavbar from '@/components/HomeNavbar';
 import Footer from '@/components/Footer';
 import axios from 'axios';
+import BookingForm from '@/components/BookingForm';
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
@@ -133,6 +134,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <HomeNavbar />
+      {/* <BookingForm/> */}
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-center mb-8">Find Local Services</h1>
         <SearchBar onSearch={handleSearch} />
