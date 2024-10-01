@@ -1,19 +1,18 @@
-import React from 'react'
-import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
-
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+import React from 'react';
+import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-black text-white absolute mb-[0%] bottom-0">
+    <footer className="bottom-0 w-full bg-black text-white mt-auto">
       <div className="container mx-auto py-8 px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact Us</h3>
             <div className="flex items-center space-x-2">
               <Phone className="h-5 w-5" />
-              <span>(123) 456-7890</span>
+              <span>7848949399</span>
             </div>
             <div className="flex items-center space-x-2">
               <Mail className="h-5 w-5" />
@@ -28,8 +27,10 @@ const Footer = () => {
             <div className="flex items-start space-x-2">
               <MapPin className="h-5 w-5 mt-1 flex-shrink-0" />
               <span>
-                123 Service Street<br />
-                Cityville, State 12345<br />
+                123 Service Street
+                <br />
+                Cityville, State 12345
+                <br />
                 United States
               </span>
             </div>
@@ -71,7 +72,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
