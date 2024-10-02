@@ -114,6 +114,7 @@ export default function BookingForm({ provider_id }) {
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
+                      className="bg-white"
                       selected={field.value}
                       onSelect={(date) => {
                         field.onChange(date);
