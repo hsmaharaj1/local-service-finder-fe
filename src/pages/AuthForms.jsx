@@ -45,7 +45,7 @@ const LoginForm = () => {
     
 
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/login', data);
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, data);
       if(response.data.success){
         //Dashboard Page
 
@@ -117,7 +117,7 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/api/providers/add-provider", data);
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/providers/add-provider`, data);
 
       if (response.status === 201) {
         alert("Registration submitted successfully!");

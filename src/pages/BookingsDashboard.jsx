@@ -69,12 +69,12 @@ const BookingsDashboard = () => {
       return;
     }
 
-    const check = await axios.get(`http://localhost:5001/api/auth/hasdetails/?provider_id=${token}`);
+    const check = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/hasdetails/?provider_id=${token}`);
     setShowForm(!check.data.hasDetails);
 
     try {
       const providerId = token;
-      const response = await axios.get(`http://localhost:5001/api/bookings/check-bookings/${providerId}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/bookings/check-bookings/${providerId}`);
       setBookings(response.data.bookings); // Update bookings state with fetched data
     } catch (error) {
       console.error('Error fetching bookings:', error);
@@ -83,14 +83,25 @@ const BookingsDashboard = () => {
 
   const markDone = async (bookingId) => {
     try {
-      const response = await axios.put(`http://localhost:5001/api/bookings/mark-task-done/${bookingId}`);
+      const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/bookings/mark-task-done/${bookingId}`);
       console.log('Marked as done:', response);
-      // Call fetchBookings after marking as done
-      await fetchBookings(); // Make sure to wait for the data to refresh
+  
+      // Fetch updated bookings after marking the task as done
+      const updatedBookingsResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/bookings/check-bookings/${localStorage.getItem('id')}`);
+      const updatedBookings = updatedBookingsResponse.data.bookings;
+      console.log(updatedBookings.length)
+      if (updatedBookings.length === 0) {
+        // If there are no bookings left, clear the bookings array explicitly
+        setBookings([]);
+      } else {
+        // Otherwise, update the bookings with the refreshed list
+        setBookings(updatedBookings);
+      }
     } catch (error) {
       console.error('Error marking booking as done:', error);
     }
   };
+  
 
   useEffect(() => {
     fetchBookings(); // Fetch bookings on component mount

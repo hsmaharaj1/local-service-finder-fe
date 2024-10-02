@@ -20,7 +20,7 @@ export default function ServiceProviderDetails({ provider_id }){
   const [provider, setProvider] = useState(p);
 
   useEffect(()=>{
-    axios.get(`http://localhost:5001/api/providers/details/${provider_id}`).then((res)=>{
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/providers/details/${provider_id}`).then((res)=>{
       console.log(res.data)
       if(res.data.success){
         const obj = {...res.data.provider};

@@ -23,6 +23,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { WidthIcon } from '@radix-ui/react-icons'
 
 const formSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -97,8 +98,9 @@ const ServiceProviderForm = ({ initialData = {} }) => {
             };
 
             // Send data to the backend
-            await axios.post('http://localhost:5001/api/providers/add-provider-details', requestBody);
+            await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/providers/add-provider-details`, requestBody);
             alert("Service provider details submitted successfully!");
+            window.location.reload()
 
         } catch (error) {
             console.error("Error submitting provider details:", error);

@@ -56,7 +56,7 @@ export default function Home() {
 
   useEffect(() => {
     const getLocation = () => {
-      axios.get('http://localhost:5001/api/search/random').then((res) => {
+      axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/search/random`).then((res) => {
         if (res.data.success) {
           const tempProviders = res.data.providers; 
 
@@ -114,7 +114,7 @@ export default function Home() {
     if (query.trim() && location.latitude && location.longitude) {
       try {
         console.log(query, location.latitude, location.longitude);
-        const response = await axios.post('http://localhost:5001/api/search/query', { search, location });
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/search/query`, { search, location });
         const data = response.data.services;
         const data2 = data.map(provider => ({
           name: provider.name, 
@@ -136,7 +136,7 @@ export default function Home() {
   if (showDetails && selectedProvider) {
     return (
       <div className="min-h-screen bg-background">
-        <HomeNavbar />
+        <HomeNavbar setShowDetails={setShowDetails}/>
         <ServiceProviderDetails provider_id={selectedProvider.provider_id} />
         <Footer />
       </div>
