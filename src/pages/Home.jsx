@@ -31,7 +31,7 @@ const SearchBar = ({ onSearch }) => {
         placeholder="Search for services..."
         className="pl-8"
       />
-      <Button type="submit" variant="secondary" >
+      <Button type="submit" variant="secondary" className="bg-slate-950 text-white hover:bg-slate-200 hover:text-slate-950">
         Search
       </Button>
     </form>
@@ -58,14 +58,14 @@ export default function Home() {
     const getLocation = () => {
       axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/search/random`).then((res) => {
         if (res.data.success) {
-          const tempProviders = res.data.providers; 
+          const tempProviders = res.data.providers;
 
           const serviceProviders2 = tempProviders.map(provider => ({
-              name: provider.name, 
-              category: provider.category,
-              location: provider.location,
-              rating: 4.5, 
-              provider_id: provider.id
+            name: provider.name,
+            category: provider.category,
+            location: provider.location,
+            rating: 4.5,
+            provider_id: provider.id
           }));
 
           setsp(serviceProviders2)
@@ -117,10 +117,10 @@ export default function Home() {
         const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/search/query`, { search, location });
         const data = response.data.services;
         const data2 = data.map(provider => ({
-          name: provider.name, 
+          name: provider.name,
           category: provider.category,
           location: provider.location,
-          rating: 4.5, 
+          rating: 4.5,
           provider_id: provider.id
         }));
         setsp(data2);
@@ -136,28 +136,29 @@ export default function Home() {
   if (showDetails && selectedProvider) {
     return (
       <div className="min-h-screen bg-background">
-        <HomeNavbar setShowDetails={setShowDetails}/>
+        <HomeNavbar setShowDetails={setShowDetails} />
         <ServiceProviderDetails provider_id={selectedProvider.provider_id} />
         <Footer />
       </div>
     );
   } else {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="flex flex-col min-h-screen bg-background">
         <HomeNavbar />
         <main className="container mx-auto px-4 py-8">
           <h1 className="text-4xl font-bold text-center mb-8">Find Local Services</h1>
           <SearchBar onSearch={handleSearch} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+            {(sp.length === 0) && <div className='w-full flex items-center justify-center'>No Services Found</div>}
             {sp.map((provider, index) => (
-              <ServiceCard 
-                key={index} 
-                {...provider} 
+              <ServiceCard
+                key={index}
+                {...provider}
                 onClick={() => {
                   console.log(provider);
                   setSelectedProvider(provider);
                   setShowDetails(true);
-                }} 
+                }}
               />
             ))}
           </div>

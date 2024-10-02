@@ -141,7 +141,7 @@ export default function BookingForm({ provider_id }) {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">Submit Booking</Button>
+          <Button type="submit" className="w-full bg-slate-950 text-slate-50 hover:bg-slate-100 hover:text-slate-950">Submit Booking</Button>
         </form>
       </Form>
     </div>

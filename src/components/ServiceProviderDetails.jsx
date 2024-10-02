@@ -74,7 +74,7 @@ export default function ServiceProviderDetails({ provider_id }){
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" size="lg" onClick={()=>{setShowForm(true)}}>Book Service</Button>
+            <Button className="w-full bg-slate-950 text-slate-50 hover:bg-slate-100 hover:text-slate-950" size="lg" onClick={()=>{setShowForm(true)}}>Book Service</Button>
           </CardFooter>
         </Card>
       </div>

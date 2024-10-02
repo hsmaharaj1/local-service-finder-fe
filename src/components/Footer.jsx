@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Twitter, Instagram, Mail, Phone, MapPin, GithubIcon, LinkedinIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
@@ -12,7 +12,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Contact Us</h3>
             <div className="flex items-center space-x-2">
               <Phone className="h-5 w-5" />
-              <span>7848949399</span>
+              <span>+91 7848949399</span>
             </div>
             <div className="flex items-center space-x-2">
               <Mail className="h-5 w-5" />
@@ -40,19 +40,25 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Follow Us</h3>
             <div className="flex space-x-4">
               <Button variant="ghost" size="icon" asChild>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                  <Facebook className="h-5 w-5" />
-                  <span className="sr-only">Facebook</span>
+                <a href="https://github.com/hsmaharaj1" target="_blank" rel="noopener noreferrer">
+                  <GithubIcon className="h-5 w-5" />
+                  <span className="sr-only">Github</span>
                 </a>
               </Button>
               <Button variant="ghost" size="icon" asChild>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.linkedin.com/in/hsmaharaj1/" target="_blank" rel="noopener noreferrer">
+                  <LinkedinIcon className="h-5 w-5" />
+                  <span className="sr-only">LinkedIn</span>
+                </a>
+              </Button>
+              <Button variant="ghost" size="icon" asChild>
+                <a href="https://x.com/himssekhar" target="_blank" rel="noopener noreferrer">
                   <Twitter className="h-5 w-5" />
                   <span className="sr-only">Twitter</span>
                 </a>
               </Button>
               <Button variant="ghost" size="icon" asChild>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://instagram.com/hsmaharaj1" target="_blank" rel="noopener noreferrer">
                   <Instagram className="h-5 w-5" />
                   <span className="sr-only">Instagram</span>
                 </a>
@@ -61,10 +67,11 @@ const Footer = () => {
           </div>
         </div>
         
-        <Separator className="my-8 bg-primary-foreground/20" />
+        <Separator className="my-2 bg-primary-foreground/20" />
         
         <div className="text-center text-sm">
-          <p>&copy; 2023 Local Service Finder. All rights reserved.</p>
+          <p className='mb-2'>Developed by H I M A N S H U</p>
+          <p>&copy; 2024 Local Service Finder. All rights reserved.</p>
           <div className="mt-2 space-x-4">
             <a href="/privacy-policy" className="hover:underline">Privacy Policy</a>
             <a href="/terms-of-service" className="hover:underline">Terms of Service</a>

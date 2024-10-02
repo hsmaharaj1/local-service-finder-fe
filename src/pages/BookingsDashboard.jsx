@@ -16,14 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Menu } from "lucide-react"
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -131,6 +123,7 @@ const BookingsDashboard = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
+                    {(bookings.length === 0) && <>No bookings yet</>}
                     {bookings.map((booking) => (
                       <TableRow key={booking.id}>
                         <TableCell>{booking.user_name}</TableCell>
@@ -138,7 +131,7 @@ const BookingsDashboard = () => {
                         <TableCell>{format(new Date(booking.booking_datetime), 'p')}</TableCell>
                         <TableCell>{booking.phone_number}</TableCell>
                         <TableCell>
-                          <Button onClick={() => markDone(booking.id)}>DONE</Button>
+                          <Button className="bg-slate-950 text-slate-50 hover:bg-slate-100 hover:text-slate-950" onClick={() => markDone(booking.id)}>DONE</Button>
                         </TableCell>
                       </TableRow>
                     ))}

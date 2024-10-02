@@ -201,7 +201,7 @@ const ServiceProviderForm = ({ initialData = {} }) => {
                 </Form>
             </CardContent>
             <CardFooter>
-                <Button type="submit" className="w-full" onClick={form.handleSubmit(onSubmit)}>
+                <Button type="submit" className="w-full bg-slate-950 text-slate-50 hover:bg-slate-100 hover:text-slate-950" onClick={form.handleSubmit(onSubmit)}>
                     {initialData.name ? "Update" : "Add"} Service Provider
                 </Button>
             </CardFooter>

@@ -32,7 +32,7 @@ export default function ServiceCard({ name, category, location, rating, provider
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={onClick} className="w-full">Book Now</Button>
+        <Button onClick={onClick} className="w-full bg-slate-950 text-slate-50 hover:bg-slate-100 hover:text-slate-950">Book Now</Button>
       </CardFooter>
     </Card>
   )

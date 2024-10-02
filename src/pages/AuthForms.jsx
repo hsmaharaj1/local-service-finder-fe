@@ -91,7 +91,7 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Login</Button>
+        <Button type="submit" className="w-full bg-slate-950 text-slate-50 hover:bg-slate-100 hover:text-slate-950">Login</Button>
       </form>
     </Form>
   )
@@ -179,7 +179,7 @@ const RegisterForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Register</Button>
+        <Button type="submit" className="w-full bg-slate-950 text-slate-50 hover:bg-slate-100 hover:text-slate-950">Register</Button>
       </form>
     </Form>
   );
